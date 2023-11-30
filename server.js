@@ -1,10 +1,8 @@
 const dotenv = require("dotenv");
-dotenv.config({ path: "./config.env" });
 const mongoose = require("mongoose");
 const app = require("./app");
-const cors = require("cors");
 
-app.use(cors());
+dotenv.config({ path: "./config.env" });
 
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
@@ -15,14 +13,18 @@ const DB = process.env.DATABASE.replace(
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
-    useCreateIndex: true,
+    useUnifiedTopology: true,
   })
   .then((con) => {
-    console.log("DB connections successful");
+    console.log("Database connections successful");
+  })
+  .catch((err) => {
+    console.log(err);
+    console.log("Error while connecting to database");
   });
 
 //starting server:
 const port = process.env.PORT || 3000;
-const server = app.listen(port, () => {
+app.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
